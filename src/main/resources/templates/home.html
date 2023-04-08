@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home page</title>
+</head>
+<body>
+<h3>Library:</h3>
+
+<b th:inline="text">Hi, <span th:remove="tag" sec:authentication="name"></span>!</b>
+
+<p><a th:href="@{/reader}">Enter as reader</a></p>
+
+<p><a th:href="@{/admin}">Enter as admin</a></p>
+
+<!--<form th:action="@{/logout}" method="POST">-->
+<!--    <input type="submit" value="Sign Out"/>-->
+<!--</form>-->
+
+</body>
+</html>

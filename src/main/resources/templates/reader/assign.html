@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Assign book</title>
+</head>
+<body>
+<h3>Book info:</h3>
+
+<table>
+    <tr>
+        <td>title: </td>
+        <td th:text="${book.getName()}"></td>
+    </tr>
+    <tr style="vertical-align:top">
+        <td>year of production: </td>
+        <td th:text="${book.getYearOfProduction()}"></td>
+    </tr>
+    <tr>
+        <td>author: </td>
+        <td th:text="${book.getAuthor()}"></td>
+    </tr>
+    <tr style="vertical-align:top">
+        <td>annotation: </td>
+        <td th:text="${book.getAnnotation()}"></td>
+    </tr>
+</table>
+
+<form th:method="POST" th:action="@{/reader/assign/{id}(id=${book.getId()})}">
+    <input type="submit" value="Assign!">
+</form>
+
+<p><a th:href="@{/reader}">Back to list</a></p>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reader info</title>
+</head>
+<body>
+<h3>Reader info:</h3>
+<table>
+    <tr>
+        <td>id: </td>
+        <td th:text="${person.getId()}"></td>
+    </tr>
+    <tr>
+        <td>name: </td>
+        <td th:text="${person.getName()}"></td>
+    </tr>
+    <tr>
+        <td>age: </td>
+        <td th:text="${person.getAge()}"></td>
+    </tr>
+    <tr>
+        <td>email: </td>
+        <td th:text="${person.getEmail()}"></td>
+    </tr>
+    <tr>
+        <td>phone: </td>
+        <td th:text="${person.getPhoneNumber()}"></td>
+    </tr>
+    <tr>
+        <td>status: </td>
+        <td>
+            <span th:if="${person.getRemoved()} == true">destroyed</span>
+            <span th:unless="${person.getRemoved()} == true">alive</span>
+        </td>
+    </tr>
+</table>
+
+<b>Books in use:</b>
+<div th:if="${#lists.isEmpty(booksInUse)}">
+    <div><p>Reader doesn't have any books!</p></div>
+</div>
+<div th:unless="${#lists.isEmpty(booksInUse)}">
+    <div th:each="book : ${booksInUse}">
+        <div th:text="${book.getName() + ', ' + book.getAuthor()}"></div>
+    </div>
+</div>
+
+<!--<hr/>-->
+
+<p><a th:href="@{/people/{id}/update(id=${person.getId()})}">Update reader</a></p>
+
+<div th:if="${person.getRemoved()} == false">
+    <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
+<!--    <input type="hidden" name="_method" value="DELETE">-->
+        <input type="submit" value="Delete!">
+    </form>
+</div>
+
+<div th:if="${person.getRemoved()} == true">
+    <form th:method="POST" th:action="@{/people/{id}/revive(id=${person.getId()})}">
+        <!--    <input type="hidden" name="_method" value="DELETE">-->
+        <input type="submit" value="Revive!">
+    </form>
+</div>
+
+</body>
+</html>

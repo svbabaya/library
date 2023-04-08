@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Reader's books</title>
+</head>
+<body>
+<h3 th:inline="text">Hi, <span th:remove="tag" sec:authentication="name"></span>!</h3>
+
+<b>Books in use:</b>
+<div th:if="${#lists.isEmpty(booksInUse)}">
+    <div><p>You doesn't have any books!</p></div>
+</div>
+
+<div th:unless="${#lists.isEmpty(booksInUse)}">
+    <table>
+        <tr th:each="book : ${booksInUse}">
+            <td th:text="${book.getName() + ', ' + book.getAuthor}"></td>
+            <td><a th:href="@{/reader/unlink/{id}(id=${book.getId()})}">more</a></td>
+        </tr>
+    </table>
+</div>
+
+<p><b>Books for choose:</b></p>
+<div th:if="${#lists.isEmpty(booksForChoose)}">
+    <div><p>Sorry, all books are busy!</p></div>
+</div>
+
+<div th:unless="${#lists.isEmpty(booksForChoose)}">
+    <form th:method="GET" th:action="@{/reader/assign}">
+        <label for="book">Select the book: </label>
+        <select th:object="${book}" th:field="*{id}" id="book">
+            <option th:each="book : ${booksForChoose}" th:value="${book.getId()}"
+                    th:text="${book.getName() + ', ' + book.getAuthor()}"></option>
+        </select>
+        <input type="submit" value="More!"/>
+    </form>
+</div>
+<br>
+<form th:action="@{/logout}" method="POST">
+    <input type="submit" value="Sign Out"/>
+</form>
+
+</body>
+</html>

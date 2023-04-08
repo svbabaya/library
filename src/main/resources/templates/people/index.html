@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All readers</title>
+</head>
+<body>
+<h3>All readers:</h3>
+
+<table>
+    <tr th:each="person : ${people}">
+        <td th:text="${person.getId() + ' : ' + person.getName() + ', ' + person.getAge}"></td>
+        <td>
+            <span th:if="${person.getRemoved()} == true">destroyed</span>
+            <span th:unless="${person.getRemoved()} == true">alive</span>
+        </td>
+        <td><a th:href="@{/people/{id}(id=${person.getId()})}">more</a></td>
+    </tr>
+</table>
+
+<p><a th:href="@{/people/new}">Create new reader</a></p>
+
+</body>
+</html>

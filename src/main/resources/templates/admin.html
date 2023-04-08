@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin page</title>
+</head>
+<body>
+<h3>Library manage:</h3>
+
+<b th:inline="text">Hi, <span th:remove="tag" sec:authentication="name"></span>!</b>
+
+<p><a th:href="@{/books}">Books</a></p>
+<p><a th:href="@{/people}">People</a></p>
+
+<form th:action="@{/logout}" method="POST">
+    <input type="submit" value="Sign Out"/>
+</form>
+
+
+</body>
+</html>

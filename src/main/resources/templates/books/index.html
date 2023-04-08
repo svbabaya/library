@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All books</title>
+</head>
+<body>
+<h3>All books:</h3>
+<!--<p th:each="book : ${books}">-->
+<!--    <a th:href="@{/books/{id}(id=${book.getId()})}"-->
+<!--       th:text="${book.getId() + ', ' + book.getName() + ', ' + book.getYearOfProduction() + ', ' + book.getAuthor() + ' ' + book.getAnnotation}">book</a>-->
+<!--</p>-->
+
+<table>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.getId() + ' : ' + book.getName() + ', ' + book.getAuthor}"></td>
+        <td>
+            <span th:if="${book.getRemoved()} == true">forbidden</span>
+            <span th:if="${book.getRemoved()} == false AND ${book.getPersonId} == null">free</span>
+            <span th:if="${book.getRemoved()} == false AND ${book.getPersonId} != null">busy</span>
+        </td>
+        <td><a th:href="@{/books/{id}(id=${book.getId()})}">more</a></td>
+    </tr>
+</table>
+
+<p><a th:href="@{/books/new}">Create new book</a></p>
+
+</body>
+</html>

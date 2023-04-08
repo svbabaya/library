@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book info</title>
+</head>
+<body>
+<h3>Book info:</h3>
+
+<table>
+    <tr>
+        <td>id: </td>
+        <td th:text="${book.getId()}"></td>
+    </tr>
+    <tr>
+        <td>title: </td>
+        <td th:text="${book.getName()}"></td>
+    </tr>
+    <tr style="vertical-align:top">
+        <td>year of production: </td>
+        <td th:text="${book.getYearOfProduction()}"></td>
+    </tr>
+    <tr>
+        <td>author: </td>
+        <td th:text="${book.getAuthor()}"></td>
+    </tr>
+    <tr style="vertical-align:top">
+        <td>annotation: </td>
+        <td th:text="${book.getAnnotation()}"></td>
+    </tr>
+    <tr>
+        <td>status: </td>
+        <td>
+            <span th:if="${book.getRemoved()} == true">forbidden</span>
+            <span th:if="${book.getRemoved()} == false AND ${book.getPersonId} == null">free</span>
+            <span th:if="${book.getRemoved()} == false AND ${book.getPersonId} != null">busy</span>
+        </td>
+    </tr>
+</table>
+
+<div th:if="${owner} == null AND ${book.getRemoved} == false">
+    <p><b>This book is free. Who will be owner?</b></p>
+    <form th:method="POST" th:action="@{/books/{id}(id=${book.getId()})}">
+        <label for="person">Select the owner: </label>
+        <select th:object="${person}" th:field="*{id}" id="person">
+            <option th:each="person : ${people}" th:value="${person.getId()}"
+                    th:text="${person.getName()}"></option>
+        </select>
+        <input type="submit" value="Assign!"/>
+    </form>
+</div>
+
+<div th:if="${owner} != null AND ${book.getRemoved} == false">
+    <p><b>The owner is: </b></p>
+    <div th:text="${owner.getName() + ', ' + owner.getAge() + ', ' + owner.getPhoneNumber()}">value</div>
+    <br>
+    <form th:method="PATCH" th:action="@{/books/{id}(id=${book.getId()})}">
+        <input type="submit" value="Unlink the book!">
+    </form>
+</div>
+
+<div th:if="${book.getRemoved} == true">
+    <p><b>This book is forbidden!</b></p>
+</div>
+
+<br>
+<!--<hr/>-->
+
+<p th:if="${book.getRemoved} == false">
+    <a th:href="@{/books/{id}/update(id=${book.getId()})}">Update book</a>
+</p>
+
+<div th:if="${book.getRemoved} == false">
+    <form th:method="DELETE" th:action="@{/books/{id}(id=${book.getId()})}">
+    <!--    <input type="hidden" name="_method" value="DELETE">  -->
+    <input type="submit" value="Delete!">
+    </form>
+</div>
+
+<div th:if="${book.getRemoved} == true">
+    <form th:method="POST" th:action="@{/books/{id}/revive(id=${book.getId()})}">
+        <!--    <input type="hidden" name="_method" value="DELETE">  -->
+        <input type="submit" value="Revive!">
+    </form>
+</div>
+
+<p><a th:href="@{/books}">Back to list</a></p>
+
+</body>
+</html>

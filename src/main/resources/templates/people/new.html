@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Create new reader</title>
+</head>
+<body>
+<h3>Create new reader:</h3>
+
+<form th:method="POST" th:action="@{/people}" th:object="${person}">
+
+  <label for="name">unique name </label>
+  <input type="text" th:field="*{name}" id="name" style="margin-bottom: 10px">
+  <div style="color: #cd7200" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">name error</div>
+
+  <br/>
+  <label for="age">age </label>
+  <input type="text" th:field="*{age}" id="age" style="margin-bottom: 10px">
+
+  <br/>
+  <label for="email">email </label>
+  <input type="text" th:field="*{email}" id="email" style="margin-bottom: 10px">
+
+  <br/>
+  <label for="phone">phone </label>
+  <input type="text" th:field="*{phoneNumber}" id="phone" style="margin-bottom: 10px">
+
+  <br/>
+  <input type="submit" value="Create!">
+
+</form>
+
+</body>
+</html>
