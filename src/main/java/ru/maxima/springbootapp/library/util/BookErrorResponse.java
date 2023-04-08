@@ -1,8 +1,8 @@
 package ru.maxima.springbootapp.library.util;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.Getter;
 
 import java.util.Date;
 import java.util.TimeZone;
