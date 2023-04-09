@@ -7,14 +7,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.maxima.springbootapp.library.dto.BookDTO;
 import ru.maxima.springbootapp.library.dto.PersonDTO;
+import ru.maxima.springbootapp.library.models.Book;
 import ru.maxima.springbootapp.library.models.Person;
+import ru.maxima.springbootapp.library.repositories.BooksRepository;
+import ru.maxima.springbootapp.library.services.BooksService;
 import ru.maxima.springbootapp.library.services.PeopleRestService;
 import ru.maxima.springbootapp.library.services.PeopleService;
-import ru.maxima.springbootapp.library.util.PersonErrorResponse;
-import ru.maxima.springbootapp.library.util.PersonListIsEmptyException;
-import ru.maxima.springbootapp.library.util.PersonNotCreatedException;
-import ru.maxima.springbootapp.library.util.PersonNotFoundException;
+import ru.maxima.springbootapp.library.util.*;
 
 import java.util.Date;
 import java.util.List;
@@ -24,17 +25,23 @@ import java.util.TimeZone;
 @RequestMapping("/api/people")
 public class PeopleRestController {
     private final PeopleService peopleService;
+    private final BooksService booksService;
     private final PeopleRestService peopleRestService;
     private final PersonDTO personDTO;
     private final ModelMapper modelMapper;
 
+    private final BooksRepository booksRepository;
+
     @Autowired
     public PeopleRestController(PeopleService peopleService, PersonDTO personDTO,
-                                ModelMapper modelMapper, PeopleRestService peopleRestService) {
+                                ModelMapper modelMapper, PeopleRestService peopleRestService,
+                                BooksService booksService, BooksRepository booksRepository) {
         this.peopleService = peopleService;
         this.personDTO = personDTO;
         this.modelMapper = modelMapper;
         this.peopleRestService = peopleRestService;
+        this.booksService = booksService;
+        this.booksRepository = booksRepository;
     }
 
     @GetMapping("/backdoor")
@@ -238,19 +245,21 @@ public class PeopleRestController {
      *     "timezone": "Europe/Moscow"
      *  }
      * */
-//    @GetMapping("/{id}/books")
-//    public List<Book> getBooksInUse(@PathVariable("id") Long id) {
-//
-//        // Handling of person not found
-//        // Add BookDTO
-//
-//        return peopleService.findBooksInUse(id);
-//    }
+    @GetMapping("/{id}/books")
+    public List<BookDTO> getBooksInUse(@PathVariable("id") Long id) {
 
-//    @GetMapping("/{id}")
-//    public PersonDTO getPerson(@PathVariable("id") Long id) {
-//        return convertToPersonDTO(peopleService.findOne(id));
-//    }
+        List<Book> list = booksRepository.findByPersonId(id);
+        if (list.isEmpty()) {
+            throw new BookListIsEmptyException();
+        }
+        return list.stream()
+                .map(this::convertToBookDTO).toList();
+    }
+    private BookDTO convertToBookDTO(Book book) {
+
+        return modelMapper.map(book, BookDTO.class);
+    }
+
 
 
     @ExceptionHandler
@@ -271,6 +280,13 @@ public class PeopleRestController {
     public ResponseEntity<PersonErrorResponse> handelException(PersonListIsEmptyException e) {
         PersonErrorResponse response = new PersonErrorResponse(
                 "There are no readers in library", new Date(), TimeZone.getDefault());
+        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<BookErrorResponse> handelException(BookListIsEmptyException e) {
+        BookErrorResponse response = new BookErrorResponse(
+                "There are no books", new Date(), TimeZone.getDefault());
         return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
     }
 }
