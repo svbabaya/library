@@ -248,11 +248,11 @@ public class PeopleRestController {
     @GetMapping("/{id}/books")
     public List<BookDTO> getBooksInUse(@PathVariable("id") Long id) {
 
-        List<Book> lst = booksRepository.findByPersonId(id);
-        if (lst.isEmpty()) {
+        List<Book> list = booksRepository.findByPersonId(id);
+        if (list.isEmpty()) {
             throw new BookListIsEmptyException();
         }
-        return lst.stream()
+        return list.stream()
                 .map(this::convertToBookDTO).toList();
     }
     private BookDTO convertToBookDTO(Book book) {
